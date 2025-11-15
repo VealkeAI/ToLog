@@ -8,15 +8,16 @@ from aiogram.types import (
 start_kb = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text="..."),
-            KeyboardButton(text="...")
+            KeyboardButton(text="Планы📙"),
+            KeyboardButton(text="Задачи📗")
         ],
         [
-            KeyboardButton(text="...")
+            KeyboardButton(text="Напоминания📕"),
+            KeyboardButton(text="помощь📒")
         ]
     ],
     resize_keyboard=True,
-    input_field_placeholder="А что выберешь ты?",
+    input_field_placeholder="Выбор только твой..!",
     selective=True,
     one_time_keyboard=False
 )
