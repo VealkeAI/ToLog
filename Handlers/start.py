@@ -20,10 +20,9 @@ async def Start(message: Message):
     await message.answer(f"Добро пожаловать в бота для заметок log!\nГотов освобождать голову для новых идей? Вот твой id: {user_id}", reply_markup=start_kb)
     g = requests.get(f"{URL}/user/tg/{user_id}")
     if g.status_code == 500:
-        array = [2, 5, 10,]
+        
         obj = {
-            "tgId": user_id,
-            "taskIdList": array
+            "tgId": user_id
         }
 
         p = requests.post(f"{URL}/user", json=obj)
