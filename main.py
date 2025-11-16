@@ -3,7 +3,7 @@ import asyncio
 
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
-from Handlers import start
+from Handlers import start, admin
 
 load_dotenv()
 
@@ -14,7 +14,8 @@ async def main():
     bot = Bot(TOKEN)
 
     dp.include_routers(
-        start.router
+        start.router,
+        admin.router
     )
 
     await bot.delete_webhook(drop_pending_updates=True)
