@@ -3,8 +3,9 @@ import asyncio
 
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
-from Handlers import start, admin
+from Handlers import start
 from Handlers.commands import help
+from Handlers.root import admin
 
 load_dotenv()
 

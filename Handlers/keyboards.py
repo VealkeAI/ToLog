@@ -25,11 +25,12 @@ start_kb = ReplyKeyboardMarkup(
 admin_kb = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text="UserID")
+            KeyboardButton(text="UserID"),
+            KeyboardButton(text="cls")
         ]
     ],
     resize_keyboard=True,
-    input_field_placeholder="Выбор только твой..!",
+    input_field_placeholder="root",
     selective=True,
     one_time_keyboard=False
 )
