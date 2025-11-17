@@ -17,7 +17,7 @@ start_kb = ReplyKeyboardMarkup(
         ]
     ],
     resize_keyboard=True,
-    input_field_placeholder="Выбор только твой..!",
+    input_field_placeholder="Выберите опцию...",
     selective=True,
     one_time_keyboard=True
 )
