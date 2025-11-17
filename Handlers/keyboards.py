@@ -19,7 +19,7 @@ start_kb = ReplyKeyboardMarkup(
     resize_keyboard=True,
     input_field_placeholder="Выбор только твой..!",
     selective=True,
-    one_time_keyboard=False
+    one_time_keyboard=True
 )
 
 admin_kb = ReplyKeyboardMarkup(
