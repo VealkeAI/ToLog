@@ -26,6 +26,7 @@ admin_kb = ReplyKeyboardMarkup(
     keyboard=[
         [
             KeyboardButton(text="UserID"),
+            KeyboardButton(text="UserBAN"),
             KeyboardButton(text="cls")
         ]
     ],
