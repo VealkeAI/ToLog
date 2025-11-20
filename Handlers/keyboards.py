@@ -35,3 +35,19 @@ admin_kb = ReplyKeyboardMarkup(
     selective=True,
     one_time_keyboard=False
 )
+
+set_time_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="30m"),
+            KeyboardButton(text="5h")
+        ],
+        [
+            KeyboardButton(text="1mth")
+        ]
+    ],
+    resize_keyboard=True,
+    input_field_placeholder="Выберите длительность...",
+    selective=True,
+    one_time_keyboard=False
+)

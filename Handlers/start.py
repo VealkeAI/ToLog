@@ -16,15 +16,13 @@ router = Router()
 
 @router.message(F.text == "/start")
 async def Start(message: Message):
-    # user_id = message.from_user.id
+    user_id = message.from_user.id
     await message.answer(f"Добро пожаловать в бота для заметок log!\nГотов освобождать голову для новых идей?", reply_markup=start_kb)
-    # g = requests.get(f"{URL}/user/tg/{user_id}")
-    # if g.status_code == 500:
-        
+    # try:
     #     obj = {
     #         "tgId": user_id
-    #     }
+    #         }
 
-    #     p = requests.post(f"{URL}/user", json=obj)
-
-    # I'm not uncommenting this bullshit until the server is on bro
+    #     await requests.post(f"{URL}/user", json=obj)
+    # except:
+    #     print("ID can't be accessed")
