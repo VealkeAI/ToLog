@@ -2,7 +2,8 @@ from aiogram.types import (
     ReplyKeyboardMarkup,
     KeyboardButton,
     InlineKeyboardMarkup,
-    InlineKeyboardButton
+    InlineKeyboardButton,
+    CallbackQuery
 )
 
 start_kb = ReplyKeyboardMarkup(
@@ -50,4 +51,18 @@ set_time_kb = ReplyKeyboardMarkup(
     input_field_placeholder="Выберите длительность...",
     selective=True,
     one_time_keyboard=False
+)
+
+yes_no = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="✅ Да, всё верно", callback_data="correct")
+        ],
+        [
+            InlineKeyboardButton(text="❌ Изменить задачу", callback_data="incorrect")
+        ]
+    ],
+    resize_keyboard=True,
+    input_field_placeholder="Выберите длительность...",
+    selective=True
 )
