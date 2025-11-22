@@ -6,6 +6,7 @@ from aiogram import Bot, Dispatcher
 from Handlers import start
 from Handlers.commands import help, tasks
 from Handlers.root import admin
+from Handlers.settings import timezone
 from rich.console import Console
 
 console = Console()
@@ -19,6 +20,7 @@ async def main():
 
     dp.include_routers(
         start.router,
+        timezone.router,
         help.router,
         tasks.router,
         admin.router
