@@ -10,9 +10,13 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from Handlers.keyboards import yes_no, start_kb
 
+# TODO: Добавить возможность изменить задачу, важность задачи.
+
 router = Router()
 load_dotenv()
 URL = os.getenv('BASE_URL')
+
+unic_num = 0
 
 class Form(StatesGroup):
     user_id = State()
@@ -45,11 +49,19 @@ async def verify(message: Message, state: FSMContext):
     
     await message.answer(verifying, reply_markup=yes_no)
     await state.set_state(Form.check)
-    await upload(data=data)
     
 @router.callback_query(F.data == "correct", Form.check)
 async def check(call: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    await upload(data=data)
     await call.message.answer("Задача была создана!", reply_markup=start_kb)
+    await call.answer()
+
+@router.callback_query(F.data == "incorrect", Form.check)
+async def check(call: CallbackQuery, state: FSMContext):
+    await call.message.answer("Хорошо, заполним задачу заново!\n\n" \
+                              "Какую задачу я должен установить?")
+    await state.set_state(Form.name)
     
 async def upload(data):
     user_id = data.get("user_id")
