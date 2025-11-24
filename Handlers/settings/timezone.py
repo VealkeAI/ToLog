@@ -49,7 +49,6 @@ async def settings(message: Message):
 
 @router.message(F.text == "Часовой-пояс 🌏")
 async def set_timezone(message: Message, state: FSMContext):
-    await state.set_state(Form.tzp1)
     await message.answer("Выберите часовой-пояс!\n\n"
                          "Выбрана страница 1️⃣\n\n"
                          "Для возврата в начальное меню, введите /back", 
@@ -57,7 +56,6 @@ async def set_timezone(message: Message, state: FSMContext):
 
 @router.callback_query(F.data == "page2")
 async def set_timezone(call: CallbackQuery, state: FSMContext):
-    await state.update_data(tzp1=0)
     await state.set_state(Form.tzp2)
     await call.message.edit_text("Выберите часовой-пояс!\n\n"
                                  "Выбрана страница 2️⃣\n\n"
@@ -66,7 +64,6 @@ async def set_timezone(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == "page3")
 async def set_timezone(call: CallbackQuery, state: FSMContext):
-    await state.update_data(tzp2=1)
     await state.set_state(Form.tzp3)
     await call.message.edit_text("Выберите часовой-пояс!\n\n"
                                  "Выбрана страница 3️⃣\n\n"
@@ -91,16 +88,39 @@ async def previous_page2(callback: CallbackQuery):
 async def test(call: CallbackQuery):
     tz = call.data
     if tz in timezones:
-        ready_timezone = str(datetime.now(tz=ZoneInfo(f"{tz}")))
-        split_timezone_utc_server = ready_timezone[27:-3]
-        split_timezone_utc = ready_timezone[27:]
-        split_timezone_current = ready_timezone[:-13]
-        await call.message.answer(f"Установлено ваше смещение по UTC: {split_timezone_utc} ⌚")
-        await call.message.answer(f"Ваше текущее время: {split_timezone_current} ⌚")
+        # This bullshit makes no sense btw
+        utc_now = datetime.utcnow().replace(tzinfo=ZoneInfo("UTC"))
+        local_timezone = utc_now.astimezone(ZoneInfo(tz))
+
+        utc_timezone_server = str(datetime.now(tz=ZoneInfo(f"{tz}")))
+        # Used only in PUT request cuz we need a single number
+        split_timezone_utc_server = utc_timezone_server[27:-3]
+        
+        await call.message.answer(f"Установлено ваше смещение по UTC: {local_timezone.strftime("%H:%M")} ⌚")
+        await call.message.answer(f"Ваше текущее время: {utc_now.strftime("%H:%M:%S")} ⌚")
 
         user_id = call.from_user.id
         
-        requests.put(f"{URL}/user/{user_id}/utc/{split_timezone_utc_server}")
+        # Don't uncomment this bullshit until you want to fuck the bot up
+
+        # try:
+        #     requests.put(f"{URL}/user/{user_id}/utc/{split_timezone_utc_server}")
+        # except:
+        #     print("Не выходит доставить запрос...")
+
+        log_time_yk = datetime.now(tz=ZoneInfo("Asia/Yakutsk"))
+        log_time_as = datetime.now(tz=ZoneInfo("Europe/Astrakhan"))
+
+        # try:
+        #     status = requests.put(f"{URL}/user/{user_id}/utc/{split_timezone_utc_server}")
+        # except:
+        #     print("Не выходит получить статус код...")
+
+        file_path = r"D:\Programming\ToLog-TG\logs\utcLog.txt"
+
+        logs = f"Астрахань: {log_time_as}; Якутск: {log_time_yk}; STATUS: 404"
+        with open(file_path, 'a', encoding="utf-8") as file:
+            file.write(logs)
 
         await call.answer()
 
