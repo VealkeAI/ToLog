@@ -161,7 +161,6 @@ yes_no = InlineKeyboardMarkup(
         ]
     ],
     resize_keyboard=True,
-    input_field_placeholder="Выберите длительность...",
     selective=True
 )
 
@@ -178,4 +177,22 @@ priority_index = ReplyKeyboardMarkup(
     resize_keyboard=True,
     input_field_placeholder="Выберите приоритет!",
     selective=True
+)
+
+task_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="Новая задача📕")
+        ],
+        [
+            KeyboardButton(text="Мои задачи📚")
+        ],
+        [
+            KeyboardButton(text="🔙 Выход")
+        ]
+    ],
+    resize_keyboard=True,
+    input_field_placeholder="Выберите опцию!",
+    selective=True,
+    one_time_keyboard=True
 )
