@@ -89,38 +89,34 @@ async def test(call: CallbackQuery):
     tz = call.data
     if tz in timezones:
         factory = arrow.ArrowFactory()
-        # timezone = factory.get(tz)
         time = factory.get(tzinfo=tz)
-        # time = arrow.now(f"{tz}")
-        # This bullshit makes no sense btw
+
         # Used only in PUT request cuz we need a single number
-        # split_timezone_utc_server = utc_timezone_server[27:-3]
-        
-        # await call.message.answer(f"Установлено ваше смещение по UTC: {local_timezone.strftime("%H:%M")} ⌚")
-        await call.message.answer(f"Ваше текущее время: {time} ⌚")
+
+        await call.message.answer(f"Выбранный регион: {tz}⌚")
+        await call.message.answer(f"Установлено ваше смещение по UTC: {time.strftime("%Z:%M")}⌚")
+        await call.message.answer(f"Ваше текущее время: {time.strftime("%H:%M:%S")} ⌚")
 
         user_id = call.from_user.id
         
         # Don't uncomment this bullshit until you want to fuck the bot up
 
         # try:
-        #     requests.put(f"{URL}/user/{user_id}/utc/{split_timezone_utc_server}")
+        #    status = requests.put(f"{URL}/user/{user_id}/utc/{time.strftime("%Z")}")
         # except:
-        #     print("Не выходит доставить запрос...")
+        #     print("Не выходит доставить запрос...\n" \
+        #           "Не выходит получить статус код...")
 
-        # log_time_yk = datetime.now(tz=ZoneInfo("Asia/Yakutsk"))
-        # log_time_as = datetime.now(tz=ZoneInfo("Europe/Astrakhan"))
+        log_time_yk = factory.get(tzinfo="Asia/Yakutsk")
+        log_time_as = factory.get(tzinfo="Europe/Astrakhan")
 
-        # try:
-        #     status = requests.put(f"{URL}/user/{user_id}/utc/{split_timezone_utc_server}")
-        # except:
-        #     print("Не выходит получить статус код...")
+        file_path = r"D:\Programming\ToLog-TG\logs\utcLog.txt"
 
-        # file_path = r"D:\Programming\ToLog-TG\logs\utcLog.txt"
 
-        # logs = f"Астрахань: {log_time_as}; Якутск: {log_time_yk}; STATUS: 404"
-        # with open(file_path, 'a', encoding="utf-8") as file:
-        #     file.write(logs)
+        # to past when the server is on: status.status_code
+        logs = f"Астрахань: {log_time_as.strftime("%H:%M:%S")}; Якутск: {log_time_yk.strftime("%H:%M:%S")}; status: 404"
+        with open(file_path, 'a', encoding="utf-8") as file:
+            file.write(logs)
 
         await call.answer()
 
