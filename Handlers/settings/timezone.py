@@ -1,9 +1,9 @@
 import requests
 import os
+import arrow
 
 from dotenv import load_dotenv
 from datetime import datetime
-from zoneinfo import ZoneInfo
 from aiogram.types import Message, callback_query, CallbackQuery
 from aiogram.filters import Command
 from aiogram import F, Router
@@ -88,16 +88,16 @@ async def previous_page2(callback: CallbackQuery):
 async def test(call: CallbackQuery):
     tz = call.data
     if tz in timezones:
+        factory = arrow.ArrowFactory()
+        # timezone = factory.get(tz)
+        time = factory.get(tzinfo=tz)
+        # time = arrow.now(f"{tz}")
         # This bullshit makes no sense btw
-        utc_now = datetime.utcnow().replace(tzinfo=ZoneInfo("UTC"))
-        local_timezone = utc_now.astimezone(ZoneInfo(tz))
-
-        utc_timezone_server = str(datetime.now(tz=ZoneInfo(f"{tz}")))
         # Used only in PUT request cuz we need a single number
-        split_timezone_utc_server = utc_timezone_server[27:-3]
+        # split_timezone_utc_server = utc_timezone_server[27:-3]
         
-        await call.message.answer(f"Установлено ваше смещение по UTC: {local_timezone.strftime("%H:%M")} ⌚")
-        await call.message.answer(f"Ваше текущее время: {utc_now.strftime("%H:%M:%S")} ⌚")
+        # await call.message.answer(f"Установлено ваше смещение по UTC: {local_timezone.strftime("%H:%M")} ⌚")
+        await call.message.answer(f"Ваше текущее время: {time} ⌚")
 
         user_id = call.from_user.id
         
@@ -108,19 +108,19 @@ async def test(call: CallbackQuery):
         # except:
         #     print("Не выходит доставить запрос...")
 
-        log_time_yk = datetime.now(tz=ZoneInfo("Asia/Yakutsk"))
-        log_time_as = datetime.now(tz=ZoneInfo("Europe/Astrakhan"))
+        # log_time_yk = datetime.now(tz=ZoneInfo("Asia/Yakutsk"))
+        # log_time_as = datetime.now(tz=ZoneInfo("Europe/Astrakhan"))
 
         # try:
         #     status = requests.put(f"{URL}/user/{user_id}/utc/{split_timezone_utc_server}")
         # except:
         #     print("Не выходит получить статус код...")
 
-        file_path = r"D:\Programming\ToLog-TG\logs\utcLog.txt"
+        # file_path = r"D:\Programming\ToLog-TG\logs\utcLog.txt"
 
-        logs = f"Астрахань: {log_time_as}; Якутск: {log_time_yk}; STATUS: 404"
-        with open(file_path, 'a', encoding="utf-8") as file:
-            file.write(logs)
+        # logs = f"Астрахань: {log_time_as}; Якутск: {log_time_yk}; STATUS: 404"
+        # with open(file_path, 'a', encoding="utf-8") as file:
+        #     file.write(logs)
 
         await call.answer()
 

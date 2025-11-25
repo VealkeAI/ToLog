@@ -164,3 +164,18 @@ yes_no = InlineKeyboardMarkup(
     input_field_placeholder="Выберите длительность...",
     selective=True
 )
+
+priority_index = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="Обычный 🌑"),
+            KeyboardButton(text="Средний 🌒")
+        ],
+        [
+            KeyboardButton(text="Высокий 🌓")
+        ]
+    ],
+    resize_keyboard=True,
+    input_field_placeholder="Выберите приоритет!",
+    selective=True
+)

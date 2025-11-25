@@ -19,13 +19,15 @@ async def Start(message: Message):
     user_id = message.from_user.id
     await message.answer(f"Добро пожаловать в бота для заметок log!\nГотов освобождать голову для новых идей?", reply_markup=start_kb)
 
-    try:
+    # Don't uncomment till the server is on
 
-        obj = {
-            "tgId": user_id      
-            }
+    # try:
+
+    #     obj = {
+    #         "tgId": user_id      
+    #         }
         
-        await requests.post(f"{URL}/user", json=obj)
+    #     await requests.post(f"{URL}/user", json=obj)
 
-    except:
-        print("ID can't be accessed")
+    # except:
+    #     print("ID can't be accessed")
