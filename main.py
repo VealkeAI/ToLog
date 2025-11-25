@@ -20,10 +20,10 @@ async def main():
 
     dp.include_routers(
         start.router,
-        timezone.router,
-        help.router,
         tasks.router,
-        admin.router
+        timezone.router,
+        admin.router,
+        help.router
     )
     console.print(f"[bold blue]Bot ID: {bot.id}\n" \
                     "Bot is running...[/bold blue]")
