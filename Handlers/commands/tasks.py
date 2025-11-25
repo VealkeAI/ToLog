@@ -11,16 +11,19 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from Handlers.keyboards import (yes_no, 
                                 start_kb,
-                                priority_index)
+                                priority_index,
+                                task_kb)
 
-# TODO: Добавить возможность изменить задачу, важность задачи.
+# TODO: важность задачи.
 
 router = Router()
 load_dotenv()
 URL = os.getenv('BASE_URL')
 
-unic_num = 0
-
+class precedence(Enum):
+    DEFAULT: str = "Обычный 🌑"
+    MEDIUM: str = "Средний 🌒"
+    HIGH: str = "Высокий 🌓"
 class Form(StatesGroup):
     user_id = State()
     name = State()
@@ -28,11 +31,18 @@ class Form(StatesGroup):
     priority = State()
     check = State()
     upload = State()
+    back = State()
 
 @router.message(F.text == "Задачи📗")
+async def keyboard(message: Message):
+    await message.answer("Приветствую тебя в панели задач!\n\n"
+                         "Хочешь посмотреть... А может создать новую задачу!?\n\n"
+                         "Для выхода из диалога, введите /back во время проверки на корректность!", reply_markup=task_kb)
+
+@router.message(F.text == "Новая задача📕")
 async def task(message: Message, state: FSMContext):
     await state.set_state(Form.name)
-    await message.answer('Какую задачу я должен установить?')
+    await message.answer('Какую задачу я должен установить?', reply_markup=ReplyKeyboardRemove())
 
 @router.message(Form.name)
 async def desc(message: Message, state: FSMContext):
@@ -48,14 +58,22 @@ async def index(message: Message, state: FSMContext):
 
 @router.message(Form.priority)
 async def verify(message: Message, state: FSMContext):
+    
+    priority_status = ["Обычный 🌑", 
+                       "Средний 🌒", 
+                       "Высокий 🌓"]
+    
     await state.update_data(priority=message.text)
     data = await state.get_data()
+    priority = data.get("priority")
+
+    if priority not in priority_status:
+        priority = priority_status[0]
 
     verifying = "Давайте проверим всё ли верно!\n\n" \
-              f"Ваш ID: {data.get("user_id")}\n" \
               f"Задача: {data.get("name")}\n" \
               f"Описание: {data.get("description")}\n" \
-              f"Приоритет задачи: {data.get("priority")}"
+              f"Приоритет: {priority}"
     
     await message.answer(verifying, reply_markup=yes_no)
     await state.set_state(Form.check)
@@ -73,19 +91,24 @@ async def incorrect(call: CallbackQuery, state: FSMContext):
     await call.message.answer("Хорошо, заполним задачу заново!\n\n" \
                               "Какую задачу я должен установить?")
     await state.set_state(Form.name)
-    await state.clear()
+    await call.answer()
+
+@router.message(F.text == "🔙 Выход")
+async def leave(message: Message, state: FSMContext):
+    await message.answer("До новых встреч, приятель!", reply_markup=start_kb)
+    await state.set_state(None)
 
 # async def upload(data):
 #     user_id = data.get("user_id")
 #     name = data.get("name")
 #     description = data.get("description")
 
-    # Don't uncomment till the server is on
+#     # Don't uncomment till the server is on
 
-    # obj = {
-    #     "userId": user_id,
-    #     "name": name,
-    #     "description": description
-    # }
+#     obj = {
+#         "userId": user_id,
+#         "name": name,
+#         "description": description
+#     }
 
-    # requests.post(f"{URL}/task", json=obj)
+#     requests.post(f"{URL}/task", json=obj)
