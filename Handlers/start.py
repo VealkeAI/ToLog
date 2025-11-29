@@ -22,12 +22,11 @@ async def Start(message: Message):
     # Don't uncomment till the server is on
 
     # try:
-
-    #     obj = {
-    #         "tgId": user_id      
+    #     state = requests.get(f"{URL}/user/tg/{user_id}")
+    #     if state.status_code == 404:
+    #         obj = {
+    #             "tgId": user_id
     #         }
-        
-    #     await requests.post(f"{URL}/user", json=obj)
-
+    #         requests.post(f"{URL}/{user_id}", json=obj)
     # except:
-    #     print("ID can't be accessed")
+    #     print("can't process the request...")
