@@ -114,7 +114,7 @@ async def test(call: CallbackQuery):
 
 
         # to past when the server is on: status.status_code
-        logs = f"Астрахань: {log_time_as.strftime("%H:%M:%S")}; Якутск: {log_time_yk.strftime("%H:%M:%S")}; status: 404"
+        logs = f"Астрахань: {log_time_as.strftime("%H:%M:%S")}; Якутск: {log_time_yk.strftime("%H:%M:%S")}; status: 202; user: {user_id} "
         with open(file_path, 'a', encoding="utf-8") as file:
             file.write(logs)
 
