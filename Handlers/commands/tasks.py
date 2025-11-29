@@ -20,15 +20,26 @@ router = Router()
 load_dotenv()
 URL = os.getenv('BASE_URL')
 
+priority_status = ["Обычный 🌑", 
+                    "Средний 🌒", 
+                    "Высокий 🌓"]
+
 class precedence(Enum):
     DEFAULT: str = "Обычный 🌑"
     MEDIUM: str = "Средний 🌒"
     HIGH: str = "Высокий 🌓"
+
+class executionStatus(Enum):
+    DO = 1
+    DOING = 2
+    DONE = 3
+
 class Form(StatesGroup):
     user_id = State()
     name = State()
     description = State()
     priority = State()
+    taskState = State()
     check = State()
     upload = State()
     back = State()
@@ -59,10 +70,6 @@ async def index(message: Message, state: FSMContext):
 @router.message(Form.priority)
 async def verify(message: Message, state: FSMContext):
     
-    priority_status = ["Обычный 🌑", 
-                       "Средний 🌒", 
-                       "Высокий 🌓"]
-    
     await state.update_data(priority=message.text)
     data = await state.get_data()
     priority = data.get("priority")
@@ -80,6 +87,7 @@ async def verify(message: Message, state: FSMContext):
     
 @router.callback_query(F.data == "correct", Form.check)
 async def correct(call: CallbackQuery, state: FSMContext):
+    await state.update_data(taskState=executionStatus.DOING.name)
     # data = await state.get_data()
     # await upload(data=data)
     await call.message.answer("Задача была создана!", reply_markup=start_kb)
@@ -102,13 +110,21 @@ async def leave(message: Message, state: FSMContext):
 #     user_id = data.get("user_id")
 #     name = data.get("name")
 #     description = data.get("description")
+#     currentState = data.get("taskState")
+#     for state in precedence:
+#         if data.get("priority") == state.value:
+#             priority = state.name
+#         else:
+#             priority = state.DEFAULT
 
 #     # Don't uncomment till the server is on
 
 #     obj = {
 #         "userId": user_id,
 #         "name": name,
-#         "description": description
+#         "description": description,
+#         "priority": priority,
+#         "state": currentState
 #     }
 
 #     requests.post(f"{URL}/task", json=obj)
