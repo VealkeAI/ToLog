@@ -196,3 +196,15 @@ task_kb = ReplyKeyboardMarkup(
     selective=True,
     one_time_keyboard=True
 )
+
+myTasks_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="Обычный 🌑", callback_data="DEFAULT"),
+            InlineKeyboardButton(text="Средний 🌒", callback_data="MEDIUM")
+        ],
+        [
+            InlineKeyboardButton(text="Высокий 🌓", callback_data="HIGH")
+        ]
+    ]
+)
