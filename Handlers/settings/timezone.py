@@ -101,11 +101,11 @@ async def test(call: CallbackQuery):
         
         # Don't uncomment this bullshit until you want to fuck the bot up
 
-        # try:
-        #    status = requests.put(f"{URL}/user/{user_id}/utc/{time.strftime("%Z")}")
-        # except:
-        #     print("Не выходит доставить запрос...\n" \
-        #           "Не выходит получить статус код...")
+        try:
+           status = requests.put(f"{URL}/user/{user_id}/utc/{time.strftime("%Z")}")
+        except:
+            print("Не выходит доставить запрос...\n" \
+                  "Не выходит получить статус код...")
 
         log_time_yk = factory.get(tzinfo="Asia/Yakutsk")
         log_time_as = factory.get(tzinfo="Europe/Astrakhan")
@@ -114,7 +114,7 @@ async def test(call: CallbackQuery):
 
 
         # to past when the server is on: status.status_code
-        logs = f"Астрахань: {log_time_as.strftime("%H:%M:%S")}; Якутск: {log_time_yk.strftime("%H:%M:%S")}; status: 202; user: {user_id} "
+        logs = f"Астрахань: {log_time_as.strftime("%H:%M:%S")}; Якутск: {log_time_yk.strftime("%H:%M:%S")}; status: {status.status_code}; user: {user_id} "
         with open(file_path, 'a', encoding="utf-8") as file:
             file.write(logs)
 
