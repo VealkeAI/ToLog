@@ -20,13 +20,9 @@ async def Start(message: Message):
     await message.answer(f"Добро пожаловать в бота для заметок log!\nГотов освобождать голову для новых идей?", reply_markup=start_kb)
 
     # Don't uncomment till the server is on
+    
+    obj = {
+        "tgId": user_id
+    }
 
-    # try:
-    #     state = requests.get(f"{URL}/user/tg/{user_id}")
-    #     if state.status_code == 404:
-    #         obj = {
-    #             "tgId": user_id
-    #         }
-    #         requests.post(f"{URL}/{user_id}", json=obj)
-    # except:
-    #     print("can't process the request...")
+    requests.post(f"{URL}/user", json=obj)
