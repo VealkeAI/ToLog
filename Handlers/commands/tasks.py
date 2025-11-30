@@ -12,7 +12,8 @@ from aiogram.fsm.state import State, StatesGroup
 from Handlers.keyboards import (yes_no, 
                                 start_kb,
                                 priority_index,
-                                task_kb)
+                                task_kb,
+                                myTasks_kb)
 
 # TODO: важность задачи.
 
@@ -24,10 +25,11 @@ priority_status = ["Обычный 🌑",
                     "Средний 🌒", 
                     "Высокий 🌓"]
 
-class precedence(Enum):
-    DEFAULT: str = "Обычный 🌑"
-    MEDIUM: str = "Средний 🌒"
-    HIGH: str = "Высокий 🌓"
+precedence = {
+    "Обычный 🌑": "DEFAULT",
+    "Средний 🌒": "MEDIUM",
+    "Высокий 🌓": "HIGH"
+}
 
 class executionStatus(Enum):
     DO = 1
@@ -88,8 +90,8 @@ async def verify(message: Message, state: FSMContext):
 @router.callback_query(F.data == "correct", Form.check)
 async def correct(call: CallbackQuery, state: FSMContext):
     await state.update_data(taskState=executionStatus.DOING.name)
-    # data = await state.get_data()
-    # await upload(data=data)
+    data = await state.get_data()
+    await upload(data=data)
     await call.message.answer("Задача была создана!", reply_markup=start_kb)
     await call.answer()
     await state.clear()
@@ -106,25 +108,50 @@ async def leave(message: Message, state: FSMContext):
     await message.answer("До новых встреч, приятель!", reply_markup=start_kb)
     await state.set_state(None)
 
-# async def upload(data):
-#     user_id = data.get("user_id")
-#     name = data.get("name")
-#     description = data.get("description")
-#     currentState = data.get("taskState")
-#     for state in precedence:
-#         if data.get("priority") == state.value:
-#             priority = state.name
-#         else:
-#             priority = state.DEFAULT
+@router.message(F.text == "Мои задачи📚")
+async def myTasks(message: Message):
+    await message.answer("Выберите приоритет задач!", reply_markup=myTasks_kb)
 
-#     # Don't uncomment till the server is on
+@router.callback_query(F.data == "DEFAULT" or "MEDIUM" or "HIGH")
+async def defaultCategory(call: CallbackQuery):
+    user_id = call.from_user.id
+    if call.data in precedence.keys():
+        priority = precedence.get(call.data)
+    else:
+        priority = precedence.get(priority_status[0])
+        
+    obj = {
+        "userId": user_id,
+        "priority": priority
+    }
 
-#     obj = {
-#         "userId": user_id,
-#         "name": name,
-#         "description": description,
-#         "priority": priority,
-#         "state": currentState
-#     }
+    getTaskList(obj=obj)
 
-#     requests.post(f"{URL}/task", json=obj)
+
+async def getTaskList(obj):
+    getTask = requests.get(f"{URL}/task", json=obj)
+    jsonTask = getTask.json()
+    for i in len(jsonTask):
+        None
+
+async def upload(data):
+    user_id = data.get("user_id")
+    name = data.get("name")
+    description = data.get("description")
+    currentState = data.get("taskState")
+    if data.get("priority") in precedence.keys():
+        priority = precedence.get(data.get("priority"))
+    else:
+        priority = precedence.get(priority_status[0])
+            
+    # Don't uncomment till the server is on
+    
+    obj = {
+        "userId": user_id,
+        "name": name,
+        "description": description,
+        "priority": priority,
+        "state": currentState
+    }
+
+    requests.post(f"{URL}/task", json=obj)
